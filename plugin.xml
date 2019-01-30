@@ -251,6 +251,13 @@
 	  
 	 <source-file src="src/android/NotificationUtils.java"
             target-dir="src/de/appplant/cordova/plugin/background" />   
+	  
+<!-- 	    魅族集成推送的回掉接口文件 -->
+	 <source-file src="src/android/MeiZuPushMsgReceiver.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />   
+	    
+	 <source-file src="src/android/MeiZuUpsReceiver.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />   
 	    
 	    
 	 <resource-file src="res/layout/remote_layout.xml"
