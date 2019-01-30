@@ -1,0 +1,38 @@
+repositories{  
+    jcenter() 
+    flatDir { 
+     dirs 'libs' 
+    } 
+} 
+
+dependencies { 
+    compile(name: 'push-internal-3.8.1', ext: 'aar')
+    compile(name: 'push-open-2.0.1', ext: 'aar')
+    compile(name: 'push-ups-4.0.0', ext: 'aar')
+    compile files('libs/mcssdk-1.0.1.jar')
+    compile files('libs/MiPush_SDK_Client_3_4_5.jar')
+    compile files('libs/okio-1.11.0.jar')
+    compile files('libs/wire-runtime-2.3.0-RC1.jar')
+} 
+
+android { 
+    packagingOptions { 
+    exclude 'META-INF/NOTICE' 
+    exclude 'META-INF/LICENSE' 
+    } 
+    
+    defaultConfig {
+        applicationId "com.limainfo.vv"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [XIAOMI_APP_ID: "",
+                                XIAOMI_APP_KEY: "",
+                                MEIZU_APP_ID: "118498",
+                                MEIZU_APP_KEY: "37b544330bc7456da0806dd6ef2bbc30",
+                                HUAWEI_APP_ID: "",
+                                OPPO_APP_ID: "",
+                                OPPO_APP_KEY: "",
+                                OPPO_APP_SECRET: "",
+                                PACKAGE_NAME: "com.limainfo.vv"]
+
+    }
+} 
