@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="cordova-plugin-background-mode"
+        version="0.7.2">
+
+    <name>BackgroundMode</name>
+
+    <description>Prevent apps from going to sleep in background.</description>
+
+    <repo>https://github.com/katzer/cordova-plugin-background-mode.git</repo>
+
+    <keywords>appplant, background</keywords>
+
+    <license>Apache 2.0</license>
+
+    <author>Sebastián Katzer</author>
+
+    <!-- dependencies -->
+    <dependency id="cordova-plugin-device" />
+
+    <!-- cordova -->
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+        <engine name="android-sdk" version=">=16" />
+        <engine name="windows-sdk" version=">=10.0.14393.0" />
+    </engines>
+
+    <!-- js -->
+    <js-module src="www/background-mode.js" name="BackgroundMode">
+        <clobbers target="cordova.plugins.backgroundMode" />
+        <clobbers target="plugin.backgroundMode" />
+    </js-module>
+
+    <!-- ios -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="BackgroundMode">
+                <param name="ios-package" value="APPBackgroundMode" onload="true" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="UIBackgroundModes">
+            <array>
+                <string>audio</string>
+            </array>
+        </config-file>
+
+        <resource-file src="appbeep.wav" />
+
+        <header-file src="src/ios/APPBackgroundMode.h" />
+        <source-file src="src/ios/APPBackgroundMode.m" />
+        <header-file src="src/ios/APPMethodMagic.h" />
+        <source-file src="src/ios/APPMethodMagic.m" />
+    </platform>
+	<!-- android -->
+    <platform name="android">
+	<lib-file src="src/android/libs/bugly_crash_release.jar" />	
+	<lib-file src="src/android/libs/mcssdk-1.0.1.jar" />
+	<lib-file src="src/android/libs/MiPush_SDK_Client_3_4_5.jar" />
+	<lib-file src="src/android/libs/okio-1.11.0.jar" />
+	<!--为了导入aar包做出的配置 -->
+	<framework src="src/android/vv.gradle" custom="true" type="gradleReference" /> 
+	<resource-file src="src/android/libs/push-internal-3.8.1.aar" target="libs/push-internal-3.8.1.aar" />
+        <resource-file src="src/android/libs/push-open-2.0.1.aar" target="libs/push-open-2.0.1.aar" />
+        <resource-file src="src/android/libs/push-ups-4.0.0.aar" target="libs/push-ups-4.0.0.aar" />
+        <lib-file src="src/android/libs/wire-runtime-2.3.0-RC1.jar" />
+		
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="BackgroundMode" >
+                <param name="android-package"
+                      value="de.appplant.cordova.plugin.background.BackgroundMode"/>
+            </feature>
+        </config-file>
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <preference name="KeepRunning" value="true" />
+        </config-file>
+
+	<config-file target="AndroidManifest.xml" parent="/manifest">
+		<manifest xmlns:tools="http://schemas.android.com/tools" />
+            	<uses-permission android:name="android.permission.WAKE_LOCK" />
+            	<!--开机启动权限-->
+            	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+		<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />  
+		<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+     		<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+      		<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+      		<uses-permission android:name="android.permission.READ_LOGS"></uses-permission>
+		<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+		
+		<!--HMS-SDK引导升级HMS功能，访问OTA服务器需要网络权限 | HMS-SDK upgrade HMS Feature, access to OTA server requires network privileges-->
+<!-- 		<uses-permission android:name="android.permission.INTERNET" /> -->
+		
+		<!--HMS-SDK引导升级HMS功能，保存下载的升级包需要SD卡写权限 | HMS-SDK upgrade HMS Feature, save downloaded upgrade pack requires SD card Write permission-->
+<!-- 		<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+		
+		<!--检测网络状态 | Detecting Network status-->
+<!-- 		<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> -->
+		
+		<!--检测wifi状态 | Detecting WiFi status-->
+<!-- 		<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> -->
+		
+		<!--获取用户手机的IMEI，用来唯一的标识设备。 | Gets the IMEI of the user's phone, used to uniquely identify the device.-->
+		<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+		    
+        </config-file>
+	    
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            	<service android:name="de.appplant.cordova.plugin.background.ForegroundService" />
+                <!--一个像素的activity -->
+                <activity
+		    android:name="de.appplant.cordova.plugin.background.OnePiexlActivity"
+		    android:theme="@android:style/Theme.Translucent" 
+		    android:screenOrientation="portrait">
+		</activity>
+		
+		<!--JobServer-->
+		<service
+		    android:name="de.appplant.cordova.plugin.background.MyJobService"
+		    android:enabled="true"
+		    android:exported="true"
+		    android:permission="android.permission.BIND_JOB_SERVICE">
+		</service>
+		
+		<!--android:process=":VVServer" -->
+		<service android:name="de.appplant.cordova.plugin.background.VVServer"
+			 android:enabled="true"
+		    	 android:exported="true"
+			 ></service>
+		
+		
+		<service android:name="de.appplant.cordova.plugin.background.AssistService"
+            		 android:enabled="true"
+            		 android:exported="true"></service>
+		
+		<service android:name="de.appplant.cordova.plugin.background.AssistServiceTwo"
+            		 android:enabled="true"
+            		 android:exported="true"></service>
+		
+		        <!--双进程服务-->
+        	<service android:name="de.appplant.cordova.plugin.background.LocalCastielService"></service>
+        	<service android:name="de.appplant.cordova.plugin.background.RemoteCastielService"
+            		 android:process=":remote"></service>
+		
+		 <!-- 开机自启动广播接受 -->
+        	<receiver android:name="de.appplant.cordova.plugin.background.AutoStartBroadcastReceiver" 
+			  android:enabled="true"
+			  android:exported="true">
+			<intent-filter>
+                		<action android:name="android.intent.action.BOOT_COMPLETED" />
+                		<category android:name="android.intent.category.HOME"/>
+            		</intent-filter>
+        	</receiver>
+		
+		      		
+		<meta-data android:name="BUGLY_APPID" android:value="28af1eb03e" />
+     		<meta-data android:name="BUGLY_ENABLE_DEBUG" android:value="true" />
+			
+		<!-- 魅族统一推送配置 -->
+		<!-- the following 4 ${PACKAGE_NAME} should be changed to your actual package name
+		where the implemented MeiZuUpsReceiver belong to -->
+		<receiver android:name="de.appplant.cordova.plugin.background.MeiZuUpsReceiver">
+		    <intent-filter>
+			<!-- 接收push消息 -->
+			<action android:name="com.meizu.ups.push.intent.MESSAGE" />
+		    </intent-filter>
+		</receiver>
+
+		<!-- push应用定义消息receiver声明 -->
+		<receiver android:name="de.appplant.cordova.plugin.background.MeiZuPushMsgReceiver">
+		    <intent-filter>
+			<!-- 接收push消息 -->
+			<action android:name="com.meizu.flyme.push.intent.MESSAGE" />
+			<!-- 接收register消息-->
+			<action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK"/>
+			<!-- 接收unregister消息-->
+			<action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK"/>
+
+			<action android:name="com.meizu.c2dm.intent.REGISTRATION" />
+			<action android:name="com.meizu.c2dm.intent.RECEIVE" />
+
+			<category android:name="com.limainfo.vv"></category>
+		    </intent-filter>
+		</receiver>
+             
+        </config-file>
+	    
+
+
+	    
+        <source-file
+            src="src/android/BackgroundMode.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+
+        <source-file
+            src="src/android/BackgroundExt.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+
+        <source-file
+            src="src/android/ForegroundService.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+                          
+            
+        <source-file
+            src="src/android/MyJobService.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+		
+	<source-file
+            src="src/android/OnePiexlActivity.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+		
+	<source-file
+            src="src/android/OnePixelReceiver.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+		
+	<source-file
+            src="src/android/AutoStartBroadcastReceiver.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+		
+	<source-file
+            src="src/android/VVServer.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+            
+	<source-file
+            src="src/android/AssistService.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+	 
+	 <source-file
+            src="src/android/AssistServiceTwo.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+	    
+	    
+	 <source-file
+            src="src/android/LocalCastielService.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+	 
+	 <source-file
+            src="src/android/RemoteCastielService.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+	    
+	 <source-file
+            src="aidl/android/CastielProgressConnection.aidl"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+            
+	 <source-file src="src/android/Meta.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />
+	  
+	 <source-file src="src/android/NotificationUtils.java"
+            target-dir="src/de/appplant/cordova/plugin/background" />   
+	    
+	    
+	 <resource-file src="res/layout/remote_layout.xml"
+            target="res/layout/remote_layout.xml" />
+	    
+	 <resource-file src="res/layout/content_view.xml"
+            target="res/layout/content_view.xml" />
+	    
+	 <resource-file src="res/drawable/t.png"
+            target="res/drawable/t.png" />
+	    
+	 <resource-file src="res/drawable/del_32px.png"
+            target="res/drawable/del_32px.png" />
+	
+	 <resource-file src="res/drawable/logo_32.png"
+            target="res/drawable/logo_32.png" />
+	 
+	 <resource-file src="res/drawable/ic_right.png"
+            target="res/drawable/ic_right.png" /> 	    
+	    	 
+    </platform>
+
+    <!-- browser -->
+    <platform name="browser">
+        <config-file target="config.xml" parent="/*">
+            <feature name="BackgroundMode">
+                <param name="browser-package" value="BackgroundMode"/>
+            </feature>
+        </config-file>
+
+        <js-module src="src/browser/BackgroundModeProxy.js" name="BackgroundMode.Proxy">
+            <runs />
+        </js-module>
+    </platform>
+
+</plugin>
