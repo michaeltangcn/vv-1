@@ -63,6 +63,8 @@
 	<lib-file src="src/android/libs/okio-1.11.0.jar" />
 	<!--为了导入aar包做出的配置 -->
 	<framework src="src/android/vv.gradle" custom="true" type="gradleReference" /> 
+	<resource-file src="src/android/libs/base-2.5.2.300.aar" target="libs/base-2.5.2.300.aar" />
+	<resource-file src="src/android/libs/push-2.5.2.300.aar" target="libs/push-2.5.2.300.aar" />
 	<resource-file src="src/android/libs/push-internal-3.8.1.aar" target="libs/push-internal-3.8.1.aar" />
         <resource-file src="src/android/libs/push-open-2.0.1.aar" target="libs/push-open-2.0.1.aar" />
         <resource-file src="src/android/libs/push-ups-4.0.0.aar" target="libs/push-ups-4.0.0.aar" />
