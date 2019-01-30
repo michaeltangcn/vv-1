@@ -6,6 +6,8 @@ repositories{
 } 
 
 dependencies { 
+    compile(name: 'base-2.5.2.300', ext: 'aar')
+    compile(name: 'push-2.5.2.300', ext: 'aar')
     compile(name: 'push-internal-3.8.1', ext: 'aar')
     compile(name: 'push-open-2.0.1', ext: 'aar')
     compile(name: 'push-ups-4.0.0', ext: 'aar')
