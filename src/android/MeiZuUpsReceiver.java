@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.meizu.upspushsdklib.UpsCommandMessage;
 import com.meizu.upspushsdklib.UpsPushMessage;
 import com.meizu.upspushsdklib.UpsPushMessageReceiver;
+import android.content.SharedPreferences;
 
 /**
  * Author：loi on 2019-01-29 11:57
@@ -40,8 +41,17 @@ public class MeiZuUpsReceiver extends UpsPushMessageReceiver {
         Log.e("MeiZuUpsReceiver", "【onUpsCommandResult】" + upsCommandMessage);
             new Handler(context.getMainLooper()).post(new Runnable() {
             @Override
-            public void run() {
-                Toast.makeText(context, "标识符："+upsCommandMessage.toString(), Toast.LENGTH_LONG).show();
+            public void run() {              
+                if(upsCommandMessage!=null && upsCommandMessage.getCode() == 200 && upsCommandMessage.getCommandType()== CommandType.REGISTER){
+                    String token = upsCommandMessage.getCommandResult().split("_")[1];
+//                    Toast.makeText(context, "标识符："+upsCommandMessage.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "标识符："+token, Toast.LENGTH_LONG).show();
+                    SharedPreferences sharedPreferences = cordova.getActivity().getSharedPreferences("TokenFile", MODE_PRIVATE);
+                    if(sharedPreferences!=null){
+                        sharedPreferences.edit().putString("Token",String.valueOf(setTime)).commit();
+                    }   
+                }
+                //Toast.makeText(context, "标识符："+upsCommandMessage.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
