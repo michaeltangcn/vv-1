@@ -48,7 +48,7 @@ public class MeiZuUpsReceiver extends UpsPushMessageReceiver {
                     Toast.makeText(context, "标识符："+token, Toast.LENGTH_LONG).show();
                     SharedPreferences sharedPreferences = cordova.getActivity().getSharedPreferences("TokenFile", MODE_PRIVATE);
                     if(sharedPreferences!=null){
-                        sharedPreferences.edit().putString("Token",String.valueOf(setTime)).commit();
+                        sharedPreferences.edit().putString("Token",token).commit();
                     }   
                 }
                 //Toast.makeText(context, "标识符："+upsCommandMessage.toString(), Toast.LENGTH_LONG).show();
