@@ -126,10 +126,10 @@ public class BackgroundMode extends CordovaPlugin {
         
         VVServer.WriteLog(cordova.getActivity(),"getPackageName:"+cordova.getActivity().getPackageName());
         
-        if(Build.MANUFACTURER.equals("Meizu")){
-            UpsPushManager.register(this.cordova.getActivity(),UPS_APP_ID,UPS_APP_KEY);
-            PushManager.register(this.cordova.getActivity(), APP_ID, APP_KEY);
-        }
+        UpsPushManager.register(this.cordova.getActivity(),UPS_APP_ID,UPS_APP_KEY);//只需要注册一个集成推送就好了，它会自动配置厂家的appkey和id
+//         if(Build.MANUFACTURER.equals("Meizu")){
+//             PushManager.register(this.cordova.getActivity(), APP_ID, APP_KEY);
+//         }
 
         if(isOpenDebugModel)
             VVServer.WriteLog(cordova.getActivity(), " initialize");
