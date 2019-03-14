@@ -1,7 +1,9 @@
 package de.appplant.cordova.plugin.background;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.meizu.upspushsdklib.UpsCommandMessage;
 import com.meizu.upspushsdklib.UpsPushMessage;
@@ -36,5 +38,11 @@ public class MeiZuUpsReceiver extends UpsPushMessageReceiver {
     @Override
     public void onUpsCommandResult(Context context, UpsCommandMessage upsCommandMessage) {
         Log.e("MeiZuUpsReceiver", "【onUpsCommandResult】" + upsCommandMessage);
+                new Handler(context.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "标识符："+upsCommandMessage.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
