@@ -45,7 +45,7 @@ public class MeiZuUpsReceiver extends UpsPushMessageReceiver {
                 if(upsCommandMessage!=null && upsCommandMessage.getCode() == 200 && upsCommandMessage.getCommandType()== CommandType.REGISTER){
                     String token = upsCommandMessage.getCommandResult().split("_")[1];
 //                    Toast.makeText(context, "标识符："+upsCommandMessage.toString(), Toast.LENGTH_LONG).show();
-                    Toast.makeText(context, "标识符："+token, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(context, "标识符："+token, Toast.LENGTH_LONG).show();
                     SharedPreferences sharedPreferences =context.getSharedPreferences("TokenFile", MODE_PRIVATE);
                     if(sharedPreferences!=null){
                         sharedPreferences.edit().putString("Token",token).commit();
