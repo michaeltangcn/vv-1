@@ -108,6 +108,8 @@ public class BackgroundMode extends CordovaPlugin {
     public static CordovaWebView mWebView;
     private int tempNotificationId = 2;//发送的通知的Id
     private static boolean isOpenDebugModel = false;
+    public static OnePixelReceiver mOnepxReceiver;//广播接收器    
+    public static int curJobInfoId = 1;
     
     //魅族集成推送的id和key和魅族渠道的id和key
     public static String UPS_APP_ID = "1003969";
@@ -140,10 +142,10 @@ public class BackgroundMode extends CordovaPlugin {
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             VVServer.WriteLog(cordova.getActivity(), " Android 8.0 startForegroundService");
-            cordova.getActivity().startForegroundService(new Intent(cordova.getActivity(),VVServer.class));
+            cordova.getActivity().startForegroundService(new Intent(cordova.getActivity(),VVServer.class));//将vvservice作为前台服务启动
         }else {
-            VVServer.WriteLog(cordova.getActivity(), " 低版本启动服务");
-            cordova.getActivity().startService(new Intent(cordova.getActivity(), VVServer.class));//程序启动的时候就启动vvservice服务    
+            VVServer.WriteLog(cordova.getActivity(), " 8.0以下版本启动服务");
+            cordova.getActivity().startService(new Intent(cordova.getActivity(), VVServer.class));//启动vvservice服务    
         }
                 
         if(!MyJobService.isServiceWork(cordova.getActivity(),"de.appplant.cordova.plugin.background.LocalCastielService")){        
@@ -235,12 +237,13 @@ public class BackgroundMode extends CordovaPlugin {
         }
         
         if(action.equalsIgnoreCase("StartOnPixelActivityWhenScreenOff")){
-            registerScnOnAndOffBroadcast();
+            registerScnOnAndOffBroadcast();//注册监听屏幕的广播去在程序返回桌面时启动一个像素点的Activity
             callback.success();
             return true;
         }
         
         if(action.equalsIgnoreCase("StartVVSerivce")){
+            //启动VvServer服务
             Activity context = cordova.getActivity();
             Intent intent = new Intent(context, VVServer.class);
             context.startService(intent);
@@ -250,6 +253,7 @@ public class BackgroundMode extends CordovaPlugin {
         
         
         if (action.equals("BringToFront")) {
+            //将程序拉起到前台
             if(isOpenDebugModel){
                 Toast.makeText(cordova.getActivity(),cordova.getActivity().getClass().getName(), Toast.LENGTH_LONG).show();
             }
@@ -268,7 +272,8 @@ public class BackgroundMode extends CordovaPlugin {
         }
           
           
-        if(action.equalsIgnoreCase("GetLog")){              
+        if(action.equalsIgnoreCase("GetLog")){
+            //获取Log
             SharedPreferences sharedPreferences = cordova.getActivity().getSharedPreferences("TimeFile", MODE_PRIVATE);
             if (sharedPreferences != null) {
                 String log = sharedPreferences.getString("Log","");   
@@ -278,7 +283,8 @@ public class BackgroundMode extends CordovaPlugin {
         } 
         
                 
-        if(action.equalsIgnoreCase("GetToken")){              
+        if(action.equalsIgnoreCase("GetToken")){ 
+            //获取推送服务的Token（目前只限华为）
             SharedPreferences sharedPreferences = cordova.getActivity().getSharedPreferences("TokenFile", MODE_PRIVATE);
             if (sharedPreferences != null) {
                 String tokenStr = sharedPreferences.getString("Token","");   
@@ -288,6 +294,7 @@ public class BackgroundMode extends CordovaPlugin {
         } 
         
         if(action.equals("StartIPC")){
+            //启动双进程守护服务（目前在高版本系统上失效）
             if(!MyJobService.isServiceWork(cordova.getActivity(),"de.appplant.cordova.plugin.background.LocalCastielService")){
                 Intent intent = new Intent(cordova.getActivity(), LocalCastielService.class);
                 cordova.getActivity().startService(intent);
@@ -303,6 +310,7 @@ public class BackgroundMode extends CordovaPlugin {
         }
        
         if (action.equals("BringToFrontBySetTime")) {
+            //根据设置的时间去定时拉起程序（目前用的接口）
             if(args.getString(0).equals("")){
                 VVServer.WriteLog(cordova.getActivity(), " 时间点设置为空!\n");
                 return true;
@@ -331,7 +339,8 @@ public class BackgroundMode extends CordovaPlugin {
             return true;
         }
         
-        if(action.equals("joinQQChatPage")){//加入到一个QQ聊天界面
+        if(action.equals("joinQQChatPage")){
+            //加入到一个QQ聊天界面
             try {
                 //跳转到添加好友，如果qq号是好友了，直接聊天
                 String url = "mqqwpa://im/chat?chat_type=wpa&uin=" + args.getString(0);//uin是发送过去的qq号码
@@ -344,6 +353,7 @@ public class BackgroundMode extends CordovaPlugin {
         }
         
         if(action.equals("joinQQGroupPage")){
+            //加qq群
             Intent intent = new Intent();
             intent.setData(Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D" + args.getString(0)));
             // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -357,6 +367,7 @@ public class BackgroundMode extends CordovaPlugin {
         }
         
         if(action.equals("sendNotification")){
+            //发送通知
             VVServer.WriteLog(cordova.getActivity(), " 发送通知Start");
             Intent mintent = null;
             try {
@@ -403,7 +414,7 @@ public class BackgroundMode extends CordovaPlugin {
         if(action.equals("setNotificationButtonClickIntent")){
             VVServer.WriteLog(cordova.getActivity(), " 更改按钮意图Start");
             try {
-                Intent mintent = new Intent(mActivity, Class.forName("com.limainfo.vv.Vv___"));
+                Intent mintent = new Intent(cordova.getActivity(), cordova.getActivity().getClass());
                 mintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP| Intent.FLAG_ACTIVITY_NEW_TASK);
                 PendingIntent mPendingIntent = PendingIntent.getActivity(cordova.getActivity(), 0, mintent, 0);
                 NotificationUtils.setButtonIntent(cordova.getActivity(),mPendingIntent);
@@ -416,11 +427,13 @@ public class BackgroundMode extends CordovaPlugin {
         }
         
         if(action.equals("moveTaskToBack")){
+            //返回到后台而不是退出Activity
             cordova.getActivity().moveTaskToBack(true);
             return true;
         }
         
         if(action.equals("TestBugly")){
+            //请不要调用、仅为测试bugly是否成功集成使用
             Toast.makeText(cordova.getActivity(),"测试bugly",Toast.LENGTH_LONG).show();
             String message = "测试bugly";
             this.test(message, callback);
@@ -428,6 +441,7 @@ public class BackgroundMode extends CordovaPlugin {
         }
         
         if(action.equals("getMobileInfo")){
+            //获取手机信息
             callback.success(getMobileInfo());
             return true;
         }
@@ -487,7 +501,6 @@ public class BackgroundMode extends CordovaPlugin {
         }
     }
     
-    public static int curJobInfoId = 1;
     public void StartJobServer(int time){
      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
               JobScheduler jobScheduler = (JobScheduler) cordova.getActivity().getSystemService("jobscheduler");
@@ -521,7 +534,7 @@ public class BackgroundMode extends CordovaPlugin {
       }
     }
     
-    public static OnePixelReceiver mOnepxReceiver;
+
     //注册监听屏幕的广播
     public void registerScnOnAndOffBroadcast(){
         mOnepxReceiver = new OnePixelReceiver();
@@ -595,35 +608,10 @@ public class BackgroundMode extends CordovaPlugin {
             intent = new Intent(Settings.ACTION_SETTINGS);
             cordova.getActivity().startActivity(intent);
         }
-  }
-    
-    
-    // codebeat:enable[ABC]
-
-    /**
-     * Called when the system is about to start resuming a previous activity.
-     *
-     * @param multitasking Flag indicating if multitasking is turned on for app.
-     */
-    @Override
-    public void onPause(boolean multitasking) {
-        super.onPause(multitasking);
-        inBackground = true;
-        startService();
+        
     }
-
-    /**
-     * Called when the activity will start interacting with the user.
-     *
-     * @param multitasking Flag indicating if multitasking is turned on for app.
-     */
-    @Override
-    public void onResume(boolean multitasking) {
-        super.onResume(multitasking);
-        inBackground = false;
-        stopService();
-    }
-
+    
+        
     /**
      * 针对N以上的Doze模式
      *
@@ -662,6 +650,33 @@ public class BackgroundMode extends CordovaPlugin {
 //             }
 //         }
 //     }
+    
+    // codebeat:enable[ABC]
+
+    /**
+     * Called when the system is about to start resuming a previous activity.
+     *
+     * @param multitasking Flag indicating if multitasking is turned on for app.
+     */
+    @Override
+    public void onPause(boolean multitasking) {
+        super.onPause(multitasking);
+        inBackground = true;
+        startService();
+    }
+
+    /**
+     * Called when the activity will start interacting with the user.
+     *
+     * @param multitasking Flag indicating if multitasking is turned on for app.
+     */
+    @Override
+    public void onResume(boolean multitasking) {
+        super.onResume(multitasking);
+        inBackground = false;
+        stopService();
+    }
+
     
     /**
      * Called when the activity will be destroyed.
