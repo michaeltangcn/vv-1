@@ -120,6 +120,7 @@ public class MeiZuPushMsgReceiver extends MzPushMessageReceiver {
     }
 
     private void print(final Context context, final String info){
+        Log.i(TAG, info);
         new Handler(context.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
