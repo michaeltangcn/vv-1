@@ -26,11 +26,11 @@ android {
     defaultConfig {
         applicationId "com.limainfo.vv"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = [XIAOMI_APP_ID: "",
-                                XIAOMI_APP_KEY: "",
+        manifestPlaceholders = [XIAOMI_APP_ID: "\\2882303761517703470",
+                                XIAOMI_APP_KEY: "\\5761770392470",
                                 MEIZU_APP_ID: "118498",
                                 MEIZU_APP_KEY: "37b544330bc7456da0806dd6ef2bbc30",
-                                HUAWEI_APP_ID: "",
+                                HUAWEI_APP_ID: "100189343",
                                 OPPO_APP_ID: "",
                                 OPPO_APP_KEY: "",
                                 OPPO_APP_SECRET: "",
