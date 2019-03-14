@@ -145,14 +145,14 @@ public class BackgroundMode extends CordovaPlugin {
             cordova.getActivity().startService(new Intent(cordova.getActivity(), VVServer.class));//启动vvservice服务    
         }
                 
-        if(!MyJobService.isServiceWork(cordova.getActivity(),"de.appplant.cordova.plugin.background.LocalCastielService")){        
-            Intent intent = new Intent(cordova.getActivity(), LocalCastielService.class);
-            cordova.getActivity().startService(intent);
-        }
-        if(!MyJobService.isServiceWork(cordova.getActivity(),"de.appplant.cordova.plugin.background.RemoteCastielService")){
-            Intent intent1 = new Intent(cordova.getActivity(), RemoteCastielService.class);
-            cordova.getActivity().startService(intent1);
-        }     
+//         if(!MyJobService.isServiceWork(cordova.getActivity(),"de.appplant.cordova.plugin.background.LocalCastielService")){        
+//             Intent intent = new Intent(cordova.getActivity(), LocalCastielService.class);
+//             cordova.getActivity().startService(intent);
+//         }
+//         if(!MyJobService.isServiceWork(cordova.getActivity(),"de.appplant.cordova.plugin.background.RemoteCastielService")){
+//             Intent intent1 = new Intent(cordova.getActivity(), RemoteCastielService.class);
+//             cordova.getActivity().startService(intent1);
+//         }     
         if(isOpenDebugModel)
             VVServer.WriteLog(cordova.getActivity(), " pluginInitialize");
     }
