@@ -43,14 +43,13 @@ public class RemoteCastielService extends Service {
                         RemoteCastielService.this.startService(intent);
                 }
             }
-        }, 5000, 5000);
+        }, 5000, 60000);
     }
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             Log.e("LocalCastielService", String.valueOf(msg.what));
-//             Toast.makeText(RemoteCastielService.this,"RemoteCastielService: "+ String.valueOf(msg.what), Toast.LENGTH_SHORT).show();
             return true;
         }
     });
@@ -58,7 +57,6 @@ public class RemoteCastielService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e("RemoteCastielService", "启动LocalCastielService服务");
-//         Toast.makeText(RemoteCastielService.this, "启动LocalCastielService服务", Toast.LENGTH_LONG).show();
         this.bindService(new Intent(this,LocalCastielService.class), myServiceConnection, Context.BIND_IMPORTANT);
         showNotification(RemoteCastielService.this,startId);
         return START_STICKY;
@@ -73,9 +71,9 @@ public class RemoteCastielService extends Service {
         Log.e("RemoteCastielService", "显示一个普通的通知");
         Notification notification = new NotificationCompat.Builder(context)
                /**通知首次出现在通知栏，带上升动画效果的**/
-                .setTicker("远程服务")
+                //.setTicker("远程服务")
                 /**设置通知的标题**/
-                .setContentTitle("守护服务")
+                .setContentTitle("Vv小助手")
                 /**设置通知的内容**/
                 .setContentText("...")
                 /**通知产生的时间，会在通知信息里显示**/
@@ -87,9 +85,10 @@ public class RemoteCastielService extends Service {
                 /**设置他为一个正在进行的通知。他们通常是用来表示一个后台任务,用户积极参与(如播放音乐)或以某种方式正在等待,因此占用设备(如一个文件下载,同步操作,主动网络连接)**/
                 .setOngoing(false)
                 /**向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合：**/
-                .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
+                //.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
                 .build();
         Log.e("RemoteCastielService","notifyId"+String.valueOf(GRAY_SERVICE_ID));
+                
         startForeground(GRAY_SERVICE_ID, notification);
     }
 
