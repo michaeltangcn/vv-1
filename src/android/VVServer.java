@@ -352,7 +352,7 @@ public class VVServer extends Service{
                     PowerManager.ACQUIRE_CAUSES_WAKEUP;
         wakeLock = pm.newWakeLock(level, "Locationtion");
         wakeLock.setReferenceCounted(false);
-        wakeLock.acquire(1000);
+        wakeLock.acquire(15000);//申请一个15s的超时锁，15s后自动释放
     }
        
     private void releaseWakeLock() {
