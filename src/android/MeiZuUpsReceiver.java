@@ -8,7 +8,9 @@ import android.widget.Toast;
 import com.meizu.upspushsdklib.UpsCommandMessage;
 import com.meizu.upspushsdklib.UpsPushMessage;
 import com.meizu.upspushsdklib.UpsPushMessageReceiver;
+import com.meizu.upspushsdklib.CommandType;
 import android.content.SharedPreferences;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Author：loi on 2019-01-29 11:57
