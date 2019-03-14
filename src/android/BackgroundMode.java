@@ -130,6 +130,9 @@ public class BackgroundMode extends CordovaPlugin {
 //         if(Build.MANUFACTURER.equals("Meizu")){
 //             PushManager.register(this.cordova.getActivity(), APP_ID, APP_KEY);
 //         }
+        
+        Toast.makeText(mActivity, "getPushId"+PushManager.getPushId(mActivity), Toast.LENGTH_SHORT).show();
+ 
 
         if(isOpenDebugModel)
             VVServer.WriteLog(cordova.getActivity(), " initialize");
