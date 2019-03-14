@@ -36,7 +36,7 @@ public class MeiZuUpsReceiver extends UpsPushMessageReceiver {
     }
 
     @Override
-    public void onUpsCommandResult(final Context context, UpsCommandMessage upsCommandMessage) {
+    public void onUpsCommandResult(final Context context, final UpsCommandMessage upsCommandMessage) {
         Log.e("MeiZuUpsReceiver", "【onUpsCommandResult】" + upsCommandMessage);
             new Handler(context.getMainLooper()).post(new Runnable() {
             @Override
