@@ -124,7 +124,7 @@ public class MeiZuPushMsgReceiver extends MzPushMessageReceiver {
         new Handler(context.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                //Toast.makeText(context, info, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, info, Toast.LENGTH_LONG).show();
             }
         });
     }
