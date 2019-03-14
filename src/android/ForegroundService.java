@@ -132,13 +132,14 @@ public class ForegroundService extends Service {
             //startForeground(NOTIFICATION_ID, makeNotification());
         }
 
-        PowerManager pm = (PowerManager)
-                getSystemService(POWER_SERVICE);
+        //为了减少耗电移除电源锁 
+//         PowerManager pm = (PowerManager)
+//                 getSystemService(POWER_SERVICE);
 
-        wakeLock = pm.newWakeLock(
-                PARTIAL_WAKE_LOCK, "BackgroundMode");
+//         wakeLock = pm.newWakeLock(
+//                 PARTIAL_WAKE_LOCK, "BackgroundMode");
 
-        wakeLock.acquire();
+//         wakeLock.acquire();
     }
 
     /**
@@ -147,11 +148,12 @@ public class ForegroundService extends Service {
     private void sleepWell() {
         stopForeground(true);
         getNotificationManager().cancel(NOTIFICATION_ID);
-
-        if (wakeLock != null) {
-            wakeLock.release();
-            wakeLock = null;
-        }
+        
+        //为了减少耗电移除电源锁 
+//         if (wakeLock != null) {
+//             wakeLock.release();
+//             wakeLock = null;
+//         }
     }
 
     /**
