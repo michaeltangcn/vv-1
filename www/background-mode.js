@@ -121,10 +121,16 @@ exports.setNotificationButtonClickIntent = function() {
     cordova.exec(null, null, 'BackgroundMode', 'setNotificationButtonClickIntent', []);
 };
 
-//电池优化
+//开启忽略电池优化
 exports.ignoreBatteryOption = function() {
     cordova.exec(null, null, 'BackgroundMode', 'ignoreBatteryOption', []);
 };
+
+//获取忽略电池优化 是否开启
+exports.GetignoreBatteryOptionState = function(success) {
+    cordova.exec(success, null, 'BackgroundMode', 'GetignoreBatteryOptionState', []);
+};
+
 
 //跳转到应用商店详情界面
 exports.launchAppMarketDetail = function() {
