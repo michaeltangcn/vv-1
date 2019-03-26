@@ -656,7 +656,6 @@ public class BackgroundMode extends CordovaPlugin {
                 }
             } catch (Exception e) {
                 return "error";
-                e.printStackTrace();
             }
         }
         
