@@ -313,6 +313,8 @@ public class BackgroundMode extends CordovaPlugin {
         }
        
         if (action.equals("BringToFrontBySetTime")) {
+            VVServer.WriteLog(cordova.getActivity(), "BringToFrontBySetTime..." );
+            
             //根据设置的时间去定时拉起程序（目前用的接口）
             if(args.getString(0).equals("")){
                 VVServer.WriteLog(cordova.getActivity(), " 时间点设置为空!\n");
